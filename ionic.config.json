@@ -1,5 +1,7 @@
 {
   "name": "Transportation",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

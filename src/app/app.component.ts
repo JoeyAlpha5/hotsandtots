@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-
+import { Storage } from '@ionic/storage';
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -17,19 +17,37 @@ export class AppComponent {
       icon: 'home'
     },
     {
-      title: 'List',
+      title: 'Profile',
       url: '/list',
-      icon: 'list'
+      icon: 'person'
+    },
+    {
+      title:'Logout',
+      // url:'/login',
+      icon:'unlock'
     }
   ];
 
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar
+    private statusBar: StatusBar,
+    private storage: Storage,
+    private router: Router
   ) {
     this.initializeApp();
   }
+
+
+  appFunc(title){
+    console.log(title);
+    if(title == "Logout"){
+      // this.storage.clear();
+      this.storage.remove("email");
+      this.router.navigate(["/login"]);
+    }
+  }
+
 
   initializeApp() {
     this.platform.ready().then(() => {

@@ -1,0 +1,131 @@
+div#body {
+    width: 100%;
+    height: 100%;
+    background: #0D0D0D;
+    text-align: -webkit-center;
+    position: absolute;
+    padding-bottom: 50px;
+    overflow: scroll;
+}
+
+#topBar {
+    --background: black;
+    color: white;
+}
+
+div#productBlock,
+div#productBlock2 {
+    width: 100%;
+    height: 60px;
+    margin-top: 5px;
+}
+
+div#productBlock2 {
+    background: black;
+    margin-top: 0px;
+    border-top: 1px solid #ffffff17;
+}
+
+#imgIcon1,
+#imgIcon3,
+#imgIcon4,
+#imgIcon5 {
+    width: 43px;
+    height: 34px;
+    background: url(truck.png);
+    background-size: cover !important;
+}
+
+#imgIcon3 {
+    background: url(small.png);
+    width: 52px;
+    height: 49px;
+}
+
+#imgIcon4 {
+    background: url(medium.png);
+    width: 52px;
+    height: 49px;
+}
+
+#imgIcon5 {
+    background: url(large.png);
+    width: 52px;
+    height: 49px;
+}
+
+.selectedVehicle #right {
+    border-left: 0px !important;
+    padding-top: 10px;
+}
+
+#truckSize {
+    color: #BBA427;
+    pointer-events: none;
+    height: 10px;
+}
+
+#min_price {
+    pointer-events: none;
+    font-size: 12px;
+}
+
+div#left {
+    float: left;
+    margin-left: 20px;
+    margin-top: 25px;
+}
+
+div#right {
+    float: right;
+    height: 40px;
+    border-left: 1px solid #ffffff12;
+    width: 73%;
+    margin-top: 25px;
+    color: white;
+    text-align: left;
+    padding-left: 20px;
+}
+
+div#right p {
+    margin: 0;
+    font-size: 15px;
+}
+
+div#right span {
+    font-size: 12px;
+}
+
+p#needTowingSpn {
+    color: white;
+    text-align: left;
+    margin-left: 20px;
+    margin-bottom: 0px;
+    margin-top: 60px;
+}
+
+p#selectVehicle {
+    text-align: left;
+    margin-left: 20px;
+    color: #BBA427;
+    font-size: 20px;
+    margin-top: 4px;
+    font-weight: bold;
+}
+
+.driverBlock {
+    width: 100%;
+    height: 105px;
+    background: black;
+    border-top: 1px solid #ffffff12;
+
+}
+
+#driverImg {
+    width: 50px;
+}
+
+p#driverName {
+    font-weight: bold;
+    color: #BBA427;
+}

@@ -2,3 +2,103 @@
   max-height: 35vh;
   overflow: hidden;
 }
+
+div#body  {
+  width: 100%;
+  height: 100%;
+  background: #0D0D0D;
+  text-align: -webkit-center;
+  position: absolute;
+  padding-bottom: 50px;
+}
+
+div#productBlock {
+  width: 95%;
+  height: 90px;
+  background: black;
+  margin-top: 5px;
+  border-radius: 10px;
+  filter: drop-shadow(2px 2px 2px black);
+}
+
+#topBar{
+  --background: black;
+  color: white;
+}
+
+ion-footer.md.footer-md.hydrated {
+  width: 100%;
+  height: 80px;
+  text-align: -webkit-center;
+  position: fixed;
+  bottom: 0;
+}
+
+#bar {
+  width: 44px;
+  height: 4px;
+  background: #d6d6d6;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  margin-top: 3px;
+}
+
+#imgIcon1{
+  width: 43px;
+  height: 34px;
+  background: url(truck.png);
+  background-size: cover;
+}
+#imgIcon2{
+  width: 34px;
+  height: 34px;
+  background: url(key.png);
+  background-size: cover;
+}
+#imgIcon3{
+  width: 38px;
+  height: 28px;
+  background: url(battery.png);
+  background-size: cover;
+}
+#imgIcon4{
+  width: 37px;
+  height: 36px;
+  background: url(fuel.png);
+  background-size: cover;
+}
+#imgIcon5{
+  width: 44px;
+  height: 34px;
+  background: url(gears.png);
+  background-size: cover;
+}
+#imgIcon6{
+  width: 34px;
+  height: 34px;
+  background: url(chat.png);
+  background-size: cover;
+}
+
+div#left {
+  float: left;
+  margin-left: 20px;
+  margin-top: 25px;
+}
+div#right {
+  float: right;
+  height: 40px;
+  border-left: 1px solid #ffffff12;
+  width: 73%;
+  margin-top: 25px;
+  color: white;
+  text-align: left;
+  padding-left: 20px;
+}
+div#right p {
+  margin: 0;
+  font-size: 15px;
+}
+div#right span {
+  font-size: 12px;
+}
