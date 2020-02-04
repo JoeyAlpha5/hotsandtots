@@ -1,0 +1,61 @@
+div#body {
+    width: 100%;
+    height: 100%;
+    background: #0D0D0D;
+    text-align: -webkit-center;
+    position: absolute;
+    padding-bottom: 50px;
+}
+
+#topBar {
+    --background: black;
+    color: white;
+}
+
+div#productBlock {
+    width: 100%;
+    height: 90px;
+    margin-top: 5px;
+}
+
+
+p {
+    margin: 0;
+    font-size: 15px;
+    color: white;
+}
+
+span {
+    font-size: 12px;
+    color: white;
+}
+
+#imgIcon2,#imgIcon3,#imgIcon4 {
+    width: 51px;
+    height: 48px;
+    background: url(small.png);
+    background-size: cover;
+}
+#imgIcon2{
+    width: 51px;
+    height: 48px;
+    background-image: url(small.png);
+}
+#imgIcon3{
+    width: 51px;
+    height: 48px;
+    background-image: url(medium.png);
+}
+#imgIcon4{
+    width: 51px;
+    height: 48px;
+    background-image: url(large.png);
+}
+
+div#mapp {
+    width: 99%;
+    height: 200px;
+    background: #f7f7f7;
+    border-radius: 20px;
+    margin-top: 20px;
+}

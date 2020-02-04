@@ -21,34 +21,24 @@
       </div>
     </div>
 
-    <div id="productBlock" class="selectedVehicle">
-      <div id="left">
-        <div id="imgIcon3" *ngIf="vehicle_size == 'Small Truck' "></div>
-        <div id="imgIcon4" *ngIf="vehicle_size == 'Medium Truck' "></div>
-        <div id="imgIcon5" *ngIf="vehicle_size == 'Large Truck' "></div>
-      </div>
-      <div id="right">
-        <ion-input id="truckSize" [(ngModel)]="vehicle_size"></ion-input>
-        <ion-input id="min_price" [(ngModel)]="min_price"></ion-input>
-        <span></span>
-      </div>
-    </div>
-
     <p id="needTowingSpn">Need towing</p>
     <p id="selectVehicle">
-      Select driver
+      Enter Destination
     </p>
 
-    <div d="productBlock" class="driverBlock" *ngFor="let item of drivers">
-      <div id="left">
-       <img id="driverImg" src="https://firebasestorage.googleapis.com/v0/b/wilsons-aa459.appspot.com/o/{{ item.image }}?alt=media"/>
-      </div>
-      <div id="right">
-        <p id="driverName">{{ item.name }}</p>
-        <span id="driverDistance">{{ item.distance }} away</span><br>
-        <span id="driverDistance">current location: {{ item.location }}</span>
-      </div>
+    <div id="destination"> 
+      <ion-input id="destinationInput" type="destinationInput" [(ngModel)]="location" (ionChange)="autocomplete()" placeholder="Enter destination"></ion-input>
     </div>
 
+    <div id="AutoCompleteResults">
+      <ion-item id="resultingPlace" *ngFor="let item of places" (click)="SetDestination(item.description)">
+        {{ item.description }}
+      </ion-item>
+    </div>
+
+    <div id="Selecteddestination" *ngIf="destination != '' ">
+      <p>{{ destination}}</p>
+      <div id="imgIconCheck"></div>
+    </div>
   </div>
 </ion-content>

@@ -1,35 +1,56 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { Router } from '@angular/router';
-import { AngularFireAuth} from '@angular/fire/auth';
-import { LoadingController } from '@ionic/angular';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 declare var google;
+
 @Component({
-  selector: 'app-towing',
-  templateUrl: './towing.page.html',
-  styleUrls: ['./towing.page.scss'],
+  selector: 'app-confirm-truck',
+  templateUrl: './confirm-truck.page.html',
+  styleUrls: ['./confirm-truck.page.scss'],
 })
-export class TowingPage implements OnInit {
+export class ConfirmTruckPage implements OnInit {
 
-  fare = 0;
-  m_fare = 0;
-  l_fare =0;
-  constructor(private route: Router,private storage: Storage,private auth: AngularFireAuth,public loadingController: LoadingController,private geolocation: Geolocation) { }
-
+  constructor(private storage: Storage,private geolocation: Geolocation) { }
+  Vehicle: any;
+  Price: any;
   ngOnInit() {
   }
 
 
-  async ionViewDidEnter(){
-    this.storage.get("email").then(x=>{
-      if(x == null){
-        this.route.navigate(['/login']);
-      }
-    })  
+  ionViewDidEnter(){
+    this.storage.get("vehicle_size").then(vehicle=>{
+      this.Vehicle = vehicle;
+    });
+    this.storage.get("fare_price").then(fare=>{
+      this.Price = fare;
+    });
 
+    this.storage.get("destination").then(d=>{
+      console.log(d);
+      this.setMap(d);
+    });
+  }
 
-    //set current pointer
+  showRoute(map,current_location,destination){
+    var directionsService = new google.maps.DirectionsService();
+    var directionsDisplay = new google.maps.DirectionsRenderer();
+    //add your map to direction service
+    directionsDisplay.setMap(map);
+    var start = current_location;
+    var end = destination;
+    var request = {
+        origin: start,
+        destination: end,
+        travelMode: 'DRIVING'
+    };
+    directionsService.route(request, function (result, status) {
+        if (status == 'OK') {
+            directionsDisplay.setDirections(result);
+        }
+    });
+  }
+
+  setMap(destination){
     var infowindow = new google.maps.InfoWindow();
     this.geolocation.getCurrentPosition().then((resp) => {
       console.log(resp.coords.latitude, resp.coords.longitude);
@@ -37,7 +58,7 @@ export class TowingPage implements OnInit {
       var directionsDisplay = new google.maps.DirectionsRenderer();
 
       var pyrmont = new google.maps.LatLng(resp.coords.latitude, resp.coords.longitude);
-      var map = new google.maps.Map(document.getElementById('map'), {
+      var map = new google.maps.Map(document.getElementById('mapp'), {
           center: pyrmont,
           zoom: 15,
           zoomControl: false,
@@ -175,52 +196,8 @@ export class TowingPage implements OnInit {
             }],
         });
         var uluru = {lat: resp.coords.latitude, lng: resp.coords.longitude};
-        var marker = new google.maps.Marker({position: uluru, map: map});
-        //get user's destination
-        this.storage.get("prices").then(x=>{
-          console.log(x, x.l_fare);
-          this.fare = x.fare;
-          this.m_fare = x.m_fare;
-          this.l_fare = x.l_fare;
-          console.log(x.dest);
-          this.storage.get("destination").then(d=>{
-            var marker = new google.maps.Marker({
-              position:x.dest ,
-              map: map,
-          });
-          infowindow.setContent('Your destination: '+ d);
-          infowindow.open(map, marker);
-          this.showRoute(map,uluru,d);
-
-          });
-        });
+        this.showRoute(map,uluru,destination);
      })
-  }
-
-  towing(vehicle_size,fare){
-    console.log(vehicle_size,fare);
-    this.storage.set("vehicle_size",vehicle_size);
-    this.storage.set("fare_price", fare);
-    this.route.navigate(['/confirm-truck']);
-  }
-
-  showRoute(map,current_location,destination){
-    var directionsService = new google.maps.DirectionsService();
-    var directionsDisplay = new google.maps.DirectionsRenderer();
-    //add your map to direction service
-    directionsDisplay.setMap(map);
-    var start = current_location;
-    var end = destination;
-    var request = {
-        origin: start,
-        destination: end,
-        travelMode: 'DRIVING'
-    };
-    directionsService.route(request, function (result, status) {
-        if (status == 'OK') {
-            directionsDisplay.setDirections(result);
-        }
-    });
   }
 
 }

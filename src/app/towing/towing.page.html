@@ -23,35 +23,33 @@
 
     <p id="needTowingSpn">Need towing</p>
     <p id="selectVehicle">
-      Select towing vehicle
+      Select vehicle
     </p>
 
 
-    <div id="productBlock2" (click)="towing('Small')">
+    <div id="map">
+    </div>
+
+
+    <div id="productBlock2" (click)="towing('Small',fare)">
       <div id="left">
         <div id="imgIcon2"></div>
-      </div>
-      <div id="right">
         <p><b>Small truck.</b></p>
-        <span>Minimum cost: <b>R580</b></span>
+        <span><b>R{{ fare }}</b></span>
       </div>
     </div>
-    <div id="productBlock2" (click)="towing('Medium')">
+    <div id="productBlock2" (click)="towing('Medium',m_fare)">
       <div id="left">
         <div id="imgIcon3"></div>
-      </div>
-      <div id="right">
         <p><b>Medium truck.</b></p>
-        <span>Minimum cost: <b>R680</b></span>
+        <span><b>R{{ m_fare }}</b></span>
       </div>
     </div>
-    <div id="productBlock2" (click)="towing('Large')">
+    <div id="productBlock2" (click)="towing('Large',l_fare)">
       <div id="left">
         <div id="imgIcon4"></div>
-      </div>
-      <div id="right">
         <p><b>Large truck.</b></p>
-        <span>Minimum cost: <b>R760</b></span>
+        <span><b>R{{ l_fare }}</b></span>
       </div>
     </div>
   </div>

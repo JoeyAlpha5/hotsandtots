@@ -13,6 +13,14 @@ div#body {
     color: white;
 }
 
+ion-input#destinationInput {
+    width: 90%;
+    background: white;
+    color: black;
+    border-radius: 5px;
+    outline: none;
+}
+
 div#productBlock,
 div#productBlock2 {
     width: 100%;
@@ -20,10 +28,32 @@ div#productBlock2 {
     margin-top: 5px;
 }
 
+
+div#Selecteddestination p {
+    color: white;
+    font-weight: bold;
+}
+
+
+#destination[_ngcontent-etm-c1] {
+    color: white;
+    font-size: 13px;
+    text-align: left;
+    margin-left: 15px;
+}
+
 div#productBlock2 {
     background: black;
     margin-top: 0px;
     border-top: 1px solid #ffffff17;
+}
+
+ion-item#resultingPlace {
+    --background: black;
+    color: white;
+    width: 90%;
+    border: 1px solid #171717;
+    border-radius: 5px;
 }
 
 #imgIcon1,
@@ -34,6 +64,19 @@ div#productBlock2 {
     height: 34px;
     background: url(truck.png);
     background-size: cover !important;
+}
+
+#imgIconCheck {
+    width: 34px;
+    height: 34px;
+    background: url(check.png);
+    background-size: cover !important;
+    margin-bottom: 10px;
+}
+
+
+#rqstDriverBtn{
+    margin-top: 20px;
 }
 
 #imgIcon3 {
@@ -52,11 +95,6 @@ div#productBlock2 {
     background: url(large.png);
     width: 52px;
     height: 49px;
-}
-
-.selectedVehicle #right {
-    border-left: 0px !important;
-    padding-top: 10px;
 }
 
 #truckSize {
@@ -101,7 +139,6 @@ p#needTowingSpn {
     text-align: left;
     margin-left: 20px;
     margin-bottom: 0px;
-    margin-top: 60px;
 }
 
 p#selectVehicle {

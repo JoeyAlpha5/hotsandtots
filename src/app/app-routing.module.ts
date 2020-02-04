@@ -26,6 +26,10 @@ const routes: Routes = [
   {
     path: 'towingdriver',
     loadChildren: () => import('./towingdriver/towingdriver.module').then( m => m.TowingdriverPageModule)
+  },
+  {
+    path: 'confirm-truck',
+    loadChildren: () => import('./confirm-truck/confirm-truck.module').then( m => m.ConfirmTruckPageModule)
   }
 ];
 

@@ -12,16 +12,24 @@ div#body {
     color: white;
 }
 
-div#productBlock,div#productBlock2 {
+div#productBlock {
     width: 100%;
     height: 90px;
     margin-top: 5px;
 }
 
 div#productBlock2{
-    background: black;
     margin-top: 0px;
     border-top: 1px solid #ffffff17;
+    width: 33%;
+    float: left;
+    color: white;
+    font-size: 12px;
+}
+
+div#left p {
+    margin: 0px;
+    margin-top: 10px;
 }
 
 p#needTowingSpn {
@@ -85,4 +93,11 @@ div#right p {
 
 div#right span {
     font-size: 12px;
+}
+
+div#map {
+    width: 99%;
+    height: 200px;
+    background: #f7f7f7;
+    border-radius: 20px;
 }

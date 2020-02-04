@@ -22,7 +22,7 @@ export class HomePage {
 
   //towing
   towing(){
-    this.route.navigate(['/towing']);
+    this.route.navigate(['/towingdriver']);
   }
 
 
@@ -36,7 +36,10 @@ export class HomePage {
       this.storage.get("password").then(p=>{
         this.auth.auth.signInWithEmailAndPassword(x, p).then(b=>{
           console.log(b);
+          //save the user's token
 
+
+          //
         }).catch(()=>{
         });
       });
