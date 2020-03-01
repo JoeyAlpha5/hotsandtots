@@ -6,6 +6,7 @@ import { AlertController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -15,8 +16,10 @@ export class LoginPage implements OnInit {
 
   email: "";
   password: "";
+  users: Observable<any>;
   constructor(private statusBar: StatusBar,private route: Router,private storage: Storage,private alert: AlertController,private database: AngularFireDatabase,private auth: AngularFireAuth,public loadingController: LoadingController) {
     // this.statusBar.styleDefault();
+    this.users = this.database.list("Users").valueChanges();
     this.statusBar.styleLightContent();
 
    }
@@ -35,8 +38,21 @@ export class LoginPage implements OnInit {
         console.log(x);
         this.storage.set("email", this.email);
         this.storage.set("password", this.password);
-        loading.dismiss();
-        this.route.navigate(['/home']);
+        //save the user's data in local database
+        this.users.subscribe(users=>{
+          for(var u = 0; u < users.length; u++){
+            if(users[u].email == this.email){
+              // console.log(users[u]);
+              // console.log(users[u].fullname)
+              // console.log(users[u].mobile)
+              this.storage.set("mobile", users[u].mobile)
+              this.storage.set("name", users[u].fullname)
+              loading.dismiss();
+              this.route.navigate(['/home']);
+            }
+          }
+        });
+
 
       }).catch(()=>{
         this.errorLogin();

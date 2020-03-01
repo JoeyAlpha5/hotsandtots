@@ -30,23 +30,6 @@ span {
     color: white;
 }
 
-p#driverDet {
-    height: 32px;
-    padding-top: 10px;
-    padding-bottom: 15px;
-}
-
-div#driverInfo {
-    position: absolute;
-    width: 100%;
-    bottom: 0;
-    background: black;
-    padding-top: 13px;
-    padding-bottom: 15px;
-    filter: drop-shadow(0 0 4px rgba(0, 0, 0, .19));
-    -webkit-filter: drop-shadow(0 0 4px rgba(0, 0, 0, .19));
-}
-
 #imgIcon2,#imgIcon3,#imgIcon4 {
     width: 51px;
     height: 48px;
@@ -57,19 +40,11 @@ div#driverInfo {
     width: 51px;
     height: 48px;
     background-image: url(small.png);
-}
-#imgIcon3{
-    width: 51px;
-    height: 48px;
-    background-image: url(medium.png);
-}
-#imgIcon4{
-    width: 51px;
-    height: 48px;
-    background-image: url(large.png);
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
-div#mapp {
+div#mappp {
     width: 99%;
     height: 200px;
     background: #f7f7f7;

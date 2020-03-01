@@ -21,7 +21,14 @@
       </div>
       <br>
       <br>
-      <ion-button>Confirm</ion-button>
+      <div id="driverInfo">
+        <img *ngIf="driver == true" src="https://firebasestorage.googleapis.com/v0/b/wilsons-aa459.appspot.com/o/{{photo}}?alt=media" id="driverImg">
+        <p *ngIf="driver == true" id="driverDet">Driver's name: <span>{{ fullname }}</span> </p>
+        <p *ngIf="driver == true" id="driverDet">ID number <span>{{ id_no }}</span></p>
+        <p *ngIf="driver == true" id="driverDet">Mobile number: <span>{{ mobile }}</span></p>
+        <p *ngIf="driver == true" id="driverDet">Distance: <span>{{ distance }} away</span></p>
+      </div>
+      <ion-button *ngIf="driver == false" (click)="confirm()">Confirm</ion-button>
     </div>
 
   </div>

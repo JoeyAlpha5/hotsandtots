@@ -6,12 +6,19 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Router } from '@angular/router';
 import { OneSignal } from '@ionic-native/onesignal/ngx';
 import { AngularFireDatabase} from '@angular/fire/database';
+import { AlertController } from '@ionic/angular';
+import { HttpClient } from '@angular/common/http';
+import { LoadingController } from '@ionic/angular';
+import { Observable } from 'rxjs';
+
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
+  data: Observable<any>;
   public appPages = [
     {
       title: 'Home',
@@ -38,7 +45,10 @@ export class AppComponent {
     private oneSignal: OneSignal,
     private route: Router,
     private database:AngularFireDatabase,
-    private router: Router
+    private router: Router,
+    public alertController: AlertController,
+    private http: HttpClient,
+    public loadingController: LoadingController
   ) {
     this.initializeApp();
   }
@@ -53,15 +63,19 @@ export class AppComponent {
     }
   }
 
-  setupPush(){
-    this.oneSignal.startInit("213117e1-5258-44df-9de4-7206c18669b9","929396145480");
+setupPush(){
+    this.oneSignal.startInit("3149b696-f959-4881-8cb3-4e9de3059598","790445352664");
 
     this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.Notification);
 
-    this.oneSignal.handleNotificationOpened().subscribe(() => {
+    this.oneSignal.handleNotificationOpened().subscribe((data) => {
       // do something when a notification is opened
       //got to notifications page
       // this.route.navigate(['/home/tabs/tab3']);
+      var notif = data.notification.payload.notificationID;
+      this.showNotification(notif);
+      
+
     });
 
     this.oneSignal.handleNotificationReceived().subscribe(() => {
@@ -78,11 +92,38 @@ export class AppComponent {
     this.oneSignal.endInit();
   }
 
+  async showNotification(notif){
+    const loading = await this.loadingController.create({
+      message: 'Loading, please wait..',
+    });
+    loading.present()
+    var url = "https://jalome-api-python.herokuapp.com/distance-matrix/";
+    this.data = this.http.get(url, {params:{"type":"getNotif","notif_id":notif} });
+    //
+    this.data.subscribe(re=>{
+      console.log("result ", re);
+      this.storage.set("fullname", re.Response.fullname);
+      this.storage.set("mobile", re.Response.mobile);
+      this.storage.set("destination", re.Response.destination);
+      loading.dismiss();
+      this.route.navigate(['/driver-in-transit']);
+    })
+
+    // const alert = await this.alertController.create({
+    //   header: 'Alert',
+    //   subHeader: 'Subtitle',
+    //   message: JSON.stringify(notif),
+    //   buttons: ['OK']
+    // });
+    // await alert.present();
+  }
+
 
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      this.setupPush();
     });
   }
 }

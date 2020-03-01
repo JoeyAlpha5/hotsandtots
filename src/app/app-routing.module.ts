@@ -30,6 +30,10 @@ const routes: Routes = [
   {
     path: 'confirm-truck',
     loadChildren: () => import('./confirm-truck/confirm-truck.module').then( m => m.ConfirmTruckPageModule)
+  },
+  {
+    path: 'driver-in-transit',
+    loadChildren: () => import('./driver-in-transit/driver-in-transit.module').then( m => m.DriverInTransitPageModule)
   }
 ];
 

@@ -20,6 +20,7 @@ export class ListPage implements OnInit {
   fullname: string;
   mobile: string;
   location: string;
+  mail:string;
   drive: boolean = false;
   user: Observable<any>;
   users: Observable<any>;
@@ -43,6 +44,7 @@ export class ListPage implements OnInit {
         var user_details = {fullname: this.fullname, mobile: this.mobile, location: this.location, email:x,driver:this.drive};  
         this.database.object("Users/"+this.mobile).set(user_details);
         // this.storage.set("mobile", this.mobile);
+        this.ionViewDidEnter();
       });
     }
   }
@@ -99,6 +101,7 @@ export class ListPage implements OnInit {
             this.mobile = val[a].mobile;
             this.drive = val[a].driver;
             this.location = val[a].location;
+            this.mail = val[a].email;
           }
         }
       });

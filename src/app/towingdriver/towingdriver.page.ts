@@ -34,8 +34,6 @@ export class TowingdriverPage implements OnInit {
       this.places_data = x;
       this.places = this.places_data.data;
     });
-
-
   }
 
 
