@@ -4,6 +4,10 @@ import { Router } from '@angular/router';
 import { AngularFireAuth} from '@angular/fire/auth';
 import { LoadingController } from '@ionic/angular';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { MenuController } from '@ionic/angular';
+import { Platform } from '@ionic/angular';
+import { Location } from "@angular/common";
 declare var google;
 @Component({
   selector: 'app-towing',
@@ -15,13 +19,19 @@ export class TowingPage implements OnInit {
   fare = 0;
   m_fare = 0;
   l_fare =0;
-  constructor(private route: Router,private storage: Storage,private auth: AngularFireAuth,public loadingController: LoadingController,private geolocation: Geolocation) { }
+  constructor(private location: Location,private platform: Platform,private menu: MenuController,private statusBar: StatusBar,private route: Router,private storage: Storage,private auth: AngularFireAuth,public loadingController: LoadingController,private geolocation: Geolocation) {
+    this.platform.backButton.subscribeWithPriority(0, ()=>{
+        this.location.back();
+      });
+   }
 
   ngOnInit() {
   }
 
 
   async ionViewDidEnter(){
+    this.statusBar.backgroundColorByHexString('#ffffff');
+    this.menu.enable(true);
     this.storage.get("email").then(x=>{
       if(x == null){
         this.route.navigate(['/login']);

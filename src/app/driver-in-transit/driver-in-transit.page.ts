@@ -6,6 +6,11 @@ import { LoadingController } from '@ionic/angular';
 import { AngularFireDatabase} from '@angular/fire/database';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { MenuController } from '@ionic/angular';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { Location } from "@angular/common";
+import { Platform } from '@ionic/angular';
+import { Router } from '@angular/router';
 declare var google;
 @Component({
   selector: 'app-driver-in-transit',
@@ -16,19 +21,75 @@ export class DriverInTransitPage implements OnInit {
 
     fullname = "---";
     mobile = "---";
-  constructor(private storage: Storage,private geolocation: Geolocation,private alert: AlertController,public loadingController: LoadingController,private database: AngularFireDatabase,private http: HttpClient) {
+  constructor(private route: Router,private location: Location,private statusBar: StatusBar,private menu: MenuController,private storage: Storage,private geolocation: Geolocation,private alert: AlertController,public loadingController: LoadingController,private database: AngularFireDatabase,private http: HttpClient,private platform: Platform) {
+    this.platform.backButton.subscribeWithPriority(0, ()=>{
+        // this.location.back();
+      });
     
    }
 
   ngOnInit() {
   }
+
+
+  async presentalert(){
+    this.storage.remove("passenger_fullname");
+    const alert = await this.alert.create({
+        header: 'Confirm Request',
+        message: 'A user has requested a ride.',
+        buttons: [
+            {
+                text: 'Reject',
+                handler: () => {
+                    //set the driver's passenger
+                    console.log('Rejected');
+                    this.storage.get("mobile").then(mobile=>{
+                        console.log("my mobile");
+                        this.database.object("Users/"+mobile).update({"picking_up":"none"});
+                        this.route.navigate(['/home']);
+                    });
+                }
+              },{
+                text: 'Confirm',
+                handler: () => {
+                    //set the driver's passenger
+                    console.log('Confirm Okay');
+                    this.storage.get("mobile").then(mobile=>{
+                        console.log("my mobile");
+                        this.database.object("Users/"+mobile).update({"picking_up":this.fullname});
+                    });
+                }
+          }
+
+        ]
+      });
   
-  async ionViewDidEnter(){
-    this.storage.get("fullname").then(fn=>{
-       this.fullname = fn;
-       console.log("fullname is ", fn)
+      await alert.present();
+  }
+  
+
+  completed(){
+    this.storage.remove("passenger_fullname");
+    this.storage.get("mobile").then(mobile=>{
+        console.log("my mobile");
+        this.database.object("Users/"+mobile).update({"picking_up":"none"});
+        this.route.navigate(['/home']);
     });
-    this.storage.get("mobile").then(mb=>{
+  }
+
+
+
+  async ionViewDidEnter(){
+    this.statusBar.backgroundColorByHexString('#ffffff');
+    this.menu.enable(true);
+    //display alert to driver
+    this.storage.get("passenger_fullname").then(fn=>{
+        this.fullname = fn;
+        console.log("fullname is ", fn);
+        this.presentalert();
+        this.storage.remove("passenger_fullname");
+    });
+    this.storage.get("passenger_mobile").then(mb=>{
         this.mobile = mb;
         console.log("mobile is ", mb);
      });

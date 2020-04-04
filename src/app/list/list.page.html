@@ -11,7 +11,7 @@
 
 <ion-content>
 
-  <ion-item>
+  <ion-item *ngIf="drive == true">
     <ion-label>Tow truck driver</ion-label>
     <ion-toggle [(ngModel)]="drive" color="primary"></ion-toggle>
   </ion-item>

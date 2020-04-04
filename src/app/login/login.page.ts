@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Observable } from 'rxjs';
+import { MenuController } from '@ionic/angular';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -17,15 +18,19 @@ export class LoginPage implements OnInit {
   email: "";
   password: "";
   users: Observable<any>;
-  constructor(private statusBar: StatusBar,private route: Router,private storage: Storage,private alert: AlertController,private database: AngularFireDatabase,private auth: AngularFireAuth,public loadingController: LoadingController) {
+  constructor(private menu: MenuController,private statusBar: StatusBar,private route: Router,private storage: Storage,private alert: AlertController,private database: AngularFireDatabase,private auth: AngularFireAuth,public loadingController: LoadingController) {
     // this.statusBar.styleDefault();
     this.users = this.database.list("Users").valueChanges();
-    this.statusBar.styleLightContent();
 
    }
 
   ngOnInit() {
   }
+
+  signUp(){
+    this.route.navigate(['/register']);
+  }
+
 
   async signIn(){
     // this.route.navigate(['/home']);//disable this when developing using internet connection
@@ -74,6 +79,10 @@ export class LoginPage implements OnInit {
   }
 
   async ionViewDidEnter(){
+    //disable menu
+    this.menu.enable(false);
+    this.statusBar.backgroundColorByHexString('#ffffff');
+
     const loading = await this.loadingController.create({
       message: 'Signing in please wait',
     });

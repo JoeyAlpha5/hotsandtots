@@ -9,7 +9,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="display_home == true">
   <div id="body">
 
       <div id="productBlock" class="needTowingBlock" (click)="towing()">
@@ -77,4 +77,49 @@
       </div> -->
 
   </div>
+</ion-content>
+
+
+
+<!--driver content-->
+<ion-content *ngIf="display_home == false">
+  <ion-item *ngIf="drive == true">
+    <ion-label>Tow truck driver</ion-label>
+    <ion-toggle checked="true" color="primary"></ion-toggle>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating"><ion-icon name="map"></ion-icon>Area:</ion-label>
+    <!-- <ion-input [(ngModel)]="location"></ion-input> -->
+
+    <ion-input type="text"  (ionChange)="locations()" [(ngModel)]="location" id="location" ></ion-input><br>
+
+    <ion-item *ngFor='let place of ( places | async)' (click)="SetLocation(place.description)">
+      {{ place.description }}
+    </ion-item>
+
+  </ion-item>
+
+  <div id="drivermap">
+  </div>
+
+  <ion-item>
+    <ion-label position="floating"><ion-icon name="person"></ion-icon> Full name:</ion-label>
+    <ion-input [(ngModel)]="fullname"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating"><ion-icon name="call"></ion-icon>Mobile:</ion-label>
+    <ion-input [(ngModel)]="mobile"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating"><ion-icon name="mail"></ion-icon>Email:</ion-label>
+    <ion-input [(ngModel)]="mail"></ion-input>
+  </ion-item>
+
+
+  <br/>
+
+  <ion-button expand="block" (click)="update()">Update</ion-button>
 </ion-content>

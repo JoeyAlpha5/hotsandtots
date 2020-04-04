@@ -10,8 +10,6 @@ import { AlertController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { LoadingController } from '@ionic/angular';
 import { Observable } from 'rxjs';
-
-
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -102,8 +100,8 @@ setupPush(){
     //
     this.data.subscribe(re=>{
       console.log("result ", re);
-      this.storage.set("fullname", re.Response.fullname);
-      this.storage.set("mobile", re.Response.mobile);
+      this.storage.set("passenger_fullname", re.Response.fullname);
+      this.storage.set("passenger_mobile", re.Response.mobile);
       this.storage.set("destination", re.Response.destination);
       loading.dismiss();
       this.route.navigate(['/driver-in-transit']);

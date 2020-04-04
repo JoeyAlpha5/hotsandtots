@@ -1,0 +1,30 @@
+<ion-content>
+  <div id="loginCont">
+    <div id="logo"></div>
+
+    <ion-item id="inputItem">
+      <ion-label position="floating"><ion-icon name="mail"></ion-icon>Email:</ion-label>
+      <ion-input type="email" [(ngModel)]="email"></ion-input>
+    </ion-item>
+
+    <ion-item id="inputItem">
+      <ion-label position="floating"><ion-icon name="call"></ion-icon>Mobile:</ion-label>
+      <ion-input type="number" [(ngModel)]="mobilenum"></ion-input>
+    </ion-item>
+
+    <ion-item id="inputItem">
+      <ion-label position="floating"><ion-icon name="unlock"></ion-icon>Password:</ion-label>
+      <ion-input type="password" [(ngModel)]="password"></ion-input>
+    </ion-item>
+
+    <ion-item id="inputItem">
+      <ion-label position="floating"><ion-icon name="unlock"></ion-icon>Verify Password:</ion-label>
+      <ion-input type="password" [(ngModel)]="password_2"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" (click)="signUp()">Register</ion-button>
+    <br/>
+    <br/>
+    <ion-text id="newUserSignUp">Existing user? - <span (click)="signIn()">sign in</span></ion-text>
+  </div>
+</ion-content>

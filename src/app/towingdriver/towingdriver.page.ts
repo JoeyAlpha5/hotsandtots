@@ -7,6 +7,10 @@ import { LoadingController } from '@ionic/angular';
 import { AngularFireDatabase} from '@angular/fire/database';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { MenuController } from '@ionic/angular';
+import { Platform } from '@ionic/angular';
+import { Location } from "@angular/common";
 declare var google;
 @Component({
   selector: 'app-towingdriver',
@@ -20,7 +24,10 @@ export class TowingdriverPage implements OnInit {
   places_data;
   fare_price;
   private headers = new Headers({ 'Accept': 'application/json' })
-  constructor(private route: Router,private storage: Storage,private auth: AngularFireAuth,public loadingController: LoadingController,private geolocation: Geolocation,private database: AngularFireDatabase,private http: HttpClient) { 
+  constructor(private Location: Location,private menu: MenuController,private statusBar: StatusBar,private route: Router,private storage: Storage,private auth: AngularFireAuth,public loadingController: LoadingController,private geolocation: Geolocation,private database: AngularFireDatabase,private http: HttpClient,private platform: Platform) { 
+    this.platform.backButton.subscribeWithPriority(0, ()=>{
+      this.location.back();
+    });
   }
 
   ngOnInit() {
@@ -61,6 +68,8 @@ export class TowingdriverPage implements OnInit {
 
 
   ionViewDidEnter(){
+    this.statusBar.backgroundColorByHexString('#ffffff');
+    this.menu.enable(true);
     this.geolocation.getCurrentPosition().then((resp) => {
       console.log(resp.coords.latitude, resp.coords.longitude);
       var pyrmont = new google.maps.LatLng(resp.coords.latitude, resp.coords.longitude);

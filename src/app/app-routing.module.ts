@@ -34,6 +34,10 @@ const routes: Routes = [
   {
     path: 'driver-in-transit',
     loadChildren: () => import('./driver-in-transit/driver-in-transit.module').then( m => m.DriverInTransitPageModule)
+  },
+  {
+    path: 'register',
+    loadChildren: () => import('./register/register.module').then( m => m.RegisterPageModule)
   }
 ];
 

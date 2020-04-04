@@ -6,6 +6,10 @@ import { LoadingController } from '@ionic/angular';
 import { AngularFireDatabase} from '@angular/fire/database';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { MenuController } from '@ionic/angular';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { Platform } from '@ionic/angular';
+import { Location } from "@angular/common";
 declare var google;
 
 @Component({
@@ -26,20 +30,23 @@ export class ConfirmTruckPage implements OnInit {
     mobile;
     driver = false;
     url = "https://jalome-api-python.herokuapp.com/distance-matrix/";
-  constructor(private storage: Storage,private geolocation: Geolocation,private alert: AlertController,public loadingController: LoadingController,private database: AngularFireDatabase,private http: HttpClient) {
+  constructor(private location: Location,private statusBar: StatusBar,private menu: MenuController,private storage: Storage,private geolocation: Geolocation,private alert: AlertController,public loadingController: LoadingController,private database: AngularFireDatabase,private http: HttpClient,private platform: Platform) {
     this.users = this.database.list("Users").valueChanges();
+    this.platform.backButton.subscribeWithPriority(0, ()=>{
+        // this.location.back();
+      });
 
    }
   Vehicle: any;
   Price: any;
   destination:any;
+  interval_counter = 20;
   ngOnInit() {
   }
 
-
   async confirm(){
     const loading = await this.loadingController.create({
-        message: 'Locating nearest driver',
+        message: 'Locating nearest driver in: '+this.interval_counter+'s',
       });
       loading.present();
       //get all drivers
@@ -53,18 +60,53 @@ export class ConfirmTruckPage implements OnInit {
         this.storage.get("name").then(name=>{
             this.storage.get("mobile").then(mobile=>{
                 console.log(mobile, name);
-                // console.log("drivers ", this.drivers)
                 //get the nearest driver
                 this.driver_details = this.http.get(this.url, {params:{"type":"getDriver","user_fullname":name,"user_mobile":mobile ,"drivers":JSON.stringify(this.drivers),"location":JSON.stringify(this.latlng)} });
                 this.driver_details.subscribe(x=>{
                     console.log("nearest driver ", x.Response);
-                    this.driver = true;
-                    this.fullname = x.Response.fullname;
-                    this.mobile = x.Response.mobile;
-                    this.photo = x.Response.photo;
-                    this.distance = x.Response.distance_from_user;
-                    this.id_no = x.Response.id_no;
-                    loading.dismiss();
+                    //check if users hasn't accepted the ride after 10 seconds
+                    var interval = setInterval(async ()=>{
+                        console.log("waiting for driver");
+                        this.interval_counter--;
+                        console.log(this.interval_counter);
+                        if(this.interval_counter == 0){
+                            this.interval_counter = 20;
+                            clearInterval(interval);
+                            loading.dismiss();
+                            const alert = await this.alert.create({
+                              header: 'Update',
+                              message: 'No driver available',
+                              buttons: ['Okay']
+                            });
+                        
+                            await alert.present();
+                        }
+                    }, 2000);
+                    //check if driver has accepted
+                    this.users.subscribe(d=>{
+                        for(var i = 0; i < d.length; i++){
+                            if(d[i].fullname == x.Response.fullname){
+                                console.log("driver's name is ", d[i].picking_up);
+                                console.log("current user's name is ", name);
+                                if(d[i].picking_up == name){
+                                    this.driver = true;
+                                    this.fullname = x.Response.fullname;
+                                    this.mobile = x.Response.mobile;
+                                    this.photo = x.Response.photo;
+                                    this.distance = x.Response.distance_from_user;
+                                    this.id_no = x.Response.id_no; 
+                                    clearInterval(interval);
+                                    loading.dismiss();
+
+                                }
+                            }
+                        }
+                    });
+
+
+
+
+
                 });
 
             });
@@ -74,6 +116,9 @@ export class ConfirmTruckPage implements OnInit {
   }
 
   ionViewDidEnter(){
+    this.statusBar.backgroundColorByHexString('#ffffff');
+    this.menu.enable(true);
+    
     this.storage.get("vehicle_size").then(vehicle=>{
       this.Vehicle = vehicle;
     });

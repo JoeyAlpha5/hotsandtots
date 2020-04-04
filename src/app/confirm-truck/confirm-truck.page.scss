@@ -3,8 +3,9 @@ div#body {
     height: 100%;
     background: #0D0D0D;
     text-align: -webkit-center;
-    position: absolute;
-    padding-bottom: 50px;
+    position: fixed;
+    padding-bottom: 100px;
+    overflow: scroll;
 }
 
 #topBar {
@@ -18,16 +19,38 @@ div#productBlock {
     margin-top: 5px;
 }
 
+#needTowingText{
+    color: white;
+}
+
+.bottomDriverInfoSec{
+    margin-bottom: 100px;
+}
+
+.ta{
+    background: #F39101 !important;
+    color: black;
+    margin-bottom: 10px;
+    width: 90%;
+    border-radius: 12px;
+    bottom: 0;
+    background: black;
+    padding-top: 13px;
+    padding-bottom: 15px;
+    filter: drop-shadow(4px 8px 4px rgb(80, 80, 80));
+    -webkit-filter: drop-shadow(4px 8px 4px rgb(80, 80, 80));
+}
+
 
 p {
     margin: 0;
     font-size: 15px;
-    color: white;
+    // color: white;
 }
 
 span {
     font-size: 12px;
-    color: white;
+    // color: white;
 }
 
 p#driverDet {
@@ -36,15 +59,27 @@ p#driverDet {
     padding-bottom: 15px;
 }
 
+
+#driverInfoSec{
+    width: 100% !important;
+    text-align: -webkit-center;
+    height: auto !important;
+}
+
 div#driverInfo {
-    position: absolute;
-    width: 100%;
+    width: 90%;
+    border-radius: 12px;
+    background: white !important;
     bottom: 0;
     background: black;
     padding-top: 13px;
     padding-bottom: 15px;
-    filter: drop-shadow(0 0 4px rgba(0, 0, 0, .19));
-    -webkit-filter: drop-shadow(0 0 4px rgba(0, 0, 0, .19));
+    filter: drop-shadow(4px 8px 4px rgb(80, 80, 80));
+    -webkit-filter: drop-shadow(4px 8px 4px rgb(80, 80, 80));
+}
+
+.driverFullName {
+    font-size: 18px !important;
 }
 
 #imgIcon2,#imgIcon3,#imgIcon4 {

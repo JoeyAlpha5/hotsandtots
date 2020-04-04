@@ -9,6 +9,9 @@ import { Observable } from 'rxjs';
 import { DataService  } from '../services/data.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { MenuController } from '@ionic/angular';
+import { Location } from "@angular/common";
+import { Platform } from '@ionic/angular';
 declare var google;
 @Component({
   selector: 'app-list',
@@ -26,10 +29,12 @@ export class ListPage implements OnInit {
   users: Observable<any>;
   places: Observable<any>;
   profile_url =  'https://uploaded.herokuapp.com/users/users';
-  constructor(private statusBar: StatusBar,private geolocation: Geolocation,private requests: DataService,private database: AngularFireDatabase,private route: Router,private storage: Storage,public actionSheetController: ActionSheetController,private auth: AngularFireAuth,public loadingController: LoadingController) {
+  constructor(private Location: Location,private menu: MenuController,private statusBar: StatusBar,private geolocation: Geolocation,private requests: DataService,private database: AngularFireDatabase,private route: Router,private storage: Storage,public actionSheetController: ActionSheetController,private auth: AngularFireAuth,public loadingController: LoadingController,private platform: Platform) {
     // this.statusBar.styleDefault();
     this.users = this.database.list("Users").valueChanges();
-    this.statusBar.styleLightContent();
+    this.platform.backButton.subscribeWithPriority(0, ()=>{
+      this.Location.back();
+    });
   }
 
 
@@ -90,6 +95,8 @@ export class ListPage implements OnInit {
 
 
   async ionViewDidEnter(){
+    this.menu.enable(true);
+    this.statusBar.backgroundColorByHexString('#ffffff');
     //get user details
     this.storage.get("email").then(x=>{
       this.users.subscribe(val=>{
@@ -142,8 +149,11 @@ export class ListPage implements OnInit {
         this.auth.auth.signInWithEmailAndPassword(x, p).then(b=>{
           console.log(b);
           loading.dismiss();
-        })
+        }).catch(err=>{
+          console.log(err);
+          loading.dismiss();
+        });
       });
-    })    
+    })   
   }
 }
