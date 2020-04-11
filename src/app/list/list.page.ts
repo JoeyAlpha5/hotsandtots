@@ -96,7 +96,6 @@ export class ListPage implements OnInit {
 
   async ionViewDidEnter(){
     this.menu.enable(true);
-    this.statusBar.backgroundColorByHexString('#ffffff');
     //get user details
     this.storage.get("email").then(x=>{
       this.users.subscribe(val=>{

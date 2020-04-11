@@ -28,17 +28,16 @@ div#productBlock {
 }
 
 .ta{
-    background: #F39101 !important;
+    // background: #F39101 !important;
     color: black;
     margin-bottom: 10px;
     width: 90%;
-    border-radius: 12px;
+    // border-radius: 12px;
     bottom: 0;
     background: black;
     padding-top: 13px;
-    padding-bottom: 15px;
-    filter: drop-shadow(4px 8px 4px rgb(80, 80, 80));
-    -webkit-filter: drop-shadow(4px 8px 4px rgb(80, 80, 80));
+    // filter: drop-shadow(4px 8px 4px rgb(80, 80, 80));
+    // -webkit-filter: drop-shadow(4px 8px 4px rgb(80, 80, 80));
 }
 
 
@@ -49,7 +48,7 @@ p {
 }
 
 span {
-    font-size: 12px;
+    font-size: 18px;
     // color: white;
 }
 
@@ -68,14 +67,14 @@ p#driverDet {
 
 div#driverInfo {
     width: 90%;
-    border-radius: 12px;
-    background: white !important;
+    // border-radius: 12px;
+    // background: white !important;
     bottom: 0;
     background: black;
     padding-top: 13px;
-    padding-bottom: 15px;
-    filter: drop-shadow(4px 8px 4px rgb(80, 80, 80));
-    -webkit-filter: drop-shadow(4px 8px 4px rgb(80, 80, 80));
+    color: white;
+    // filter: drop-shadow(4px 8px 4px rgb(80, 80, 80));
+    // -webkit-filter: drop-shadow(4px 8px 4px rgb(80, 80, 80));
 }
 
 .driverFullName {
@@ -105,9 +104,23 @@ div#driverInfo {
 }
 
 div#mapp {
-    width: 99%;
-    height: 200px;
+    width: 100%;
+    height: 100%;
     background: #f7f7f7;
-    border-radius: 20px;
-    margin-top: 20px;
+    position: absolute !important;
+    top: 0;
+    z-index: -1;
+}
+
+
+img#driverImg {
+    width: 80px !important;
+}
+
+#card{
+    --background:black;
+}
+
+form#payment-form {
+    margin-top: 21px;
 }

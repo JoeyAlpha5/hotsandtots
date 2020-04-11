@@ -11,46 +11,63 @@
 
 <ion-content>
   <div id="body">
-    <div id="productBlock" (click)="towing()">
-      <div id="left">
-        <div id="imgIcon1"></div>
-      </div>
-      <div id="right">
-        <p><b>Need towing.</b></p>
-        <span>We offer a 24hr towing service.</span>
-      </div>
-    </div>
 
-    <p id="needTowingSpn">Need towing</p>
-    <p id="selectVehicle">
-      Select vehicle
-    </p>
+
+    <ion-card id="card">    
+      <ion-card-content>
+        <div id="productBlock" (click)="towing()">
+          <div id="left">
+            <div id="imgIcon1"></div>
+          </div>
+          <div id="right">
+            <p><b>Need towing.</b></p>
+            <span>We offer a 24hr towing service.</span>
+          </div>
+        </div>
+
+        <p id="needTowingSpn">Need towing</p>
+        <p id="selectVehicle">
+          Select vehicle
+        </p>
+
+
+
+        <div id="productBlock2" (click)="towing('Small',fare)">
+          <div id="left">
+            <div id="imgIcon2"></div>
+            <p><b>Small truck.</b></p>
+            <span><b>R{{ fare }}</b></span>
+          </div>
+        </div>
+        <div id="productBlock2" (click)="towing('Medium',m_fare)">
+          <div id="left">
+            <div id="imgIcon3"></div>
+            <p><b>Medium truck.</b></p>
+            <span><b>R{{ m_fare }}</b></span>
+          </div>
+        </div>
+        <div id="productBlock2" (click)="towing('Large',l_fare)">
+          <div id="left">
+            <div id="imgIcon4"></div>
+            <p><b>Large truck.</b></p>
+            <span><b>R{{ l_fare }}</b></span>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
 
 
     <div id="map">
     </div>
 
 
-    <div id="productBlock2" (click)="towing('Small',fare)">
-      <div id="left">
-        <div id="imgIcon2"></div>
-        <p><b>Small truck.</b></p>
-        <span><b>R{{ fare }}</b></span>
-      </div>
-    </div>
-    <div id="productBlock2" (click)="towing('Medium',m_fare)">
-      <div id="left">
-        <div id="imgIcon3"></div>
-        <p><b>Medium truck.</b></p>
-        <span><b>R{{ m_fare }}</b></span>
-      </div>
-    </div>
-    <div id="productBlock2" (click)="towing('Large',l_fare)">
-      <div id="left">
-        <div id="imgIcon4"></div>
-        <p><b>Large truck.</b></p>
-        <span><b>R{{ l_fare }}</b></span>
-      </div>
-    </div>
+
+
+    <!-- <ion-card id="card" class="serviceOptions">    
+      <ion-card-content>
+
+      </ion-card-content>
+    </ion-card> -->
+
   </div>
 </ion-content>

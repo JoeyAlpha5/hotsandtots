@@ -30,7 +30,6 @@ export class TowingPage implements OnInit {
 
 
   async ionViewDidEnter(){
-    this.statusBar.backgroundColorByHexString('#ffffff');
     this.menu.enable(true);
     this.storage.get("email").then(x=>{
       if(x == null){

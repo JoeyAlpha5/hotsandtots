@@ -84,7 +84,6 @@ export class HomePage {
       navigator['app'].exitApp();
     });
     this.menu.enable(true);
-    this.statusBar.backgroundColorByHexString('#ffffff');
     this.storage.get("email").then(x=>{
       // loading.dismiss();//disable this when connection available
       //save the user's device id

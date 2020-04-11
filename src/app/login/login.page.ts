@@ -81,8 +81,6 @@ export class LoginPage implements OnInit {
   async ionViewDidEnter(){
     //disable menu
     this.menu.enable(false);
-    this.statusBar.backgroundColorByHexString('#ffffff');
-
     const loading = await this.loadingController.create({
       message: 'Signing in please wait',
     });

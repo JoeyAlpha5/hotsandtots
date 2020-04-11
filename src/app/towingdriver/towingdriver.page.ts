@@ -68,7 +68,6 @@ export class TowingdriverPage implements OnInit {
 
 
   ionViewDidEnter(){
-    this.statusBar.backgroundColorByHexString('#ffffff');
     this.menu.enable(true);
     this.geolocation.getCurrentPosition().then((resp) => {
       console.log(resp.coords.latitude, resp.coords.longitude);

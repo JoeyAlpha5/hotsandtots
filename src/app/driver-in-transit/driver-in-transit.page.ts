@@ -23,7 +23,7 @@ export class DriverInTransitPage implements OnInit {
     mobile = "---";
   constructor(private route: Router,private location: Location,private statusBar: StatusBar,private menu: MenuController,private storage: Storage,private geolocation: Geolocation,private alert: AlertController,public loadingController: LoadingController,private database: AngularFireDatabase,private http: HttpClient,private platform: Platform) {
     this.platform.backButton.subscribeWithPriority(0, ()=>{
-        // this.location.back();
+        this.location.back();
       });
     
    }
@@ -80,7 +80,6 @@ export class DriverInTransitPage implements OnInit {
 
 
   async ionViewDidEnter(){
-    this.statusBar.backgroundColorByHexString('#ffffff');
     this.menu.enable(true);
     //display alert to driver
     this.storage.get("passenger_fullname").then(fn=>{

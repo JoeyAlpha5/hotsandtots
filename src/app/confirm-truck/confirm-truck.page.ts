@@ -11,6 +11,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Platform } from '@ionic/angular';
 import { Location } from "@angular/common";
 declare var google;
+declare var Stripe;
+declare var stripe;
 
 @Component({
   selector: 'app-confirm-truck',
@@ -20,6 +22,9 @@ declare var google;
 export class ConfirmTruckPage implements OnInit {
 
     users:Observable<any>;
+    loading;
+    intent_response;
+    intent_secret;
     drivers = [];
     latlng;
     driver_details:Observable<any>;
@@ -33,7 +38,7 @@ export class ConfirmTruckPage implements OnInit {
   constructor(private location: Location,private statusBar: StatusBar,private menu: MenuController,private storage: Storage,private geolocation: Geolocation,private alert: AlertController,public loadingController: LoadingController,private database: AngularFireDatabase,private http: HttpClient,private platform: Platform) {
     this.users = this.database.list("Users").valueChanges();
     this.platform.backButton.subscribeWithPriority(0, ()=>{
-        // this.location.back();
+        this.location.back();
       });
 
    }
@@ -116,7 +121,6 @@ export class ConfirmTruckPage implements OnInit {
   }
 
   ionViewDidEnter(){
-    this.statusBar.backgroundColorByHexString('#ffffff');
     this.menu.enable(true);
     
     this.storage.get("vehicle_size").then(vehicle=>{
@@ -124,6 +128,7 @@ export class ConfirmTruckPage implements OnInit {
     });
     this.storage.get("fare_price").then(fare=>{
       this.Price = fare;
+      this.getIntent(fare);
     });
 
     this.storage.get("destination").then(d=>{
@@ -132,6 +137,104 @@ export class ConfirmTruckPage implements OnInit {
       this.destination = d;
     });
   }
+
+  //stripe
+  async getIntent(price){
+    this.loading = await this.loadingController.create({
+        message: 'Please wait...',
+        duration: 2000
+      });
+      await this.loading.present();
+      //
+      var url = "https://jalome-api-python.herokuapp.com/distance-matrix/";
+      this.http.get(url, {params:{"type":"getStripeintent", "price":price} }).subscribe(x=>{
+        console.log("intext", x);
+        this.intent_response = x;
+        this.intent_secret = this.intent_response.Response.client_secret;
+        // console.log("intent secret ", this.intent_secret);
+        this.stripePayment();
+
+      });
+  }
+
+
+
+  stripePayment(){
+    //stipe payment elements
+    var stripe = Stripe('pk_test_V3YRUq2VsLyAzwqbxxpk4YuD00oAreff7h');
+    var intent_secret = this.intent_secret;
+    var showError = this.showPaymentError;
+    var alertCtrl = this.alert;
+    var elements = stripe.elements();
+    var conf = this.confirm;
+    // Set up Stripe.js and Elements to use in checkout form
+    var style = {
+        base: {
+        color: "#32325d",
+        }
+    };
+    
+    var card = elements.create("card", { style: style });
+    card.mount("#card-element");
+    var form = document.getElementById('payment-form');
+    form.addEventListener('submit', function(ev) {
+      ev.preventDefault();
+      stripe.confirmCardPayment(intent_secret, {
+        payment_method: {
+          card: card,
+          billing_details: {
+            name: 'Jenny Rosen'
+          }
+        }
+      }).then(function(result) {
+        if (result.error) {
+          // Show error to your customer (e.g., insufficient funds)
+          console.log(result.error.message);
+          showError(result.error.message,alertCtrl);
+        } else {
+          // The payment has been processed!
+          if (result.paymentIntent.status === 'succeeded') {
+            conf();
+            // Show a success message to your customer
+            // There's a risk of the customer closing the window before callback
+            // execution. Set up a webhook or plugin to listen for the
+            // payment_intent.succeeded event that handles any business critical
+            // post-payment actions.
+          }
+        }
+      });
+    });
+  }
+  ///stripe
+
+
+
+
+
+  //error message
+
+  async showError(err){
+    const alert = await this.alert.create({
+      header: 'Unable to continue',
+      subHeader: 'error:',
+      message: err,
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+
+  async showPaymentError(err,alertCtrl){
+    const alert = await alertCtrl.create({
+      header: 'Unable to continue',
+      subHeader: 'error:',
+      message: err,
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+  //erro messages
+
+
 
   showRoute(map,current_location,destination){
     var directionsService = new google.maps.DirectionsService();

@@ -55,7 +55,6 @@ export class RegisterPage implements OnInit {
 
 
   ionViewDidEnter(){
-    this.statusBar.backgroundColorByHexString('#ffffff');
     this.menu.enable(false);
   }
 
