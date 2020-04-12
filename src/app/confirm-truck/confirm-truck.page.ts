@@ -10,6 +10,9 @@ import { MenuController } from '@ionic/angular';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Platform } from '@ionic/angular';
 import { Location } from "@angular/common";
+import { ModalController } from '@ionic/angular';
+import { ModalPage } from "../modal/modal.page";
+import { Router } from '@angular/router';
 declare var google;
 declare var Stripe;
 declare var stripe;
@@ -35,7 +38,7 @@ export class ConfirmTruckPage implements OnInit {
     mobile;
     driver = false;
     url = "https://jalome-api-python.herokuapp.com/distance-matrix/";
-  constructor(private location: Location,private statusBar: StatusBar,private menu: MenuController,private storage: Storage,private geolocation: Geolocation,private alert: AlertController,public loadingController: LoadingController,private database: AngularFireDatabase,private http: HttpClient,private platform: Platform) {
+  constructor(private route: Router,private location: Location,private statusBar: StatusBar,private menu: MenuController,private storage: Storage,private geolocation: Geolocation,private alert: AlertController,public loadingController: LoadingController,private database: AngularFireDatabase,private http: HttpClient,private platform: Platform,public modalController: ModalController) {
     this.users = this.database.list("Users").valueChanges();
     this.platform.backButton.subscribeWithPriority(0, ()=>{
         this.location.back();
@@ -49,36 +52,55 @@ export class ConfirmTruckPage implements OnInit {
   ngOnInit() {
   }
 
-  async confirm(){
-    const loading = await this.loadingController.create({
-        message: 'Locating nearest driver in: '+this.interval_counter+'s',
+    //view modal
+    async viewModal(name,id,mobile,distance){
+        const modal = await this.modalController.create({
+        component: ModalPage,    
+        componentProps: {
+            'fullName': this.fullname,
+            'id_no': this.id_no,
+            'mobile': this.mobile,
+            'distance':this.distance,
+            'photo':this.photo,
+          }
+        });
+        return await modal.present();
+    }
+
+    cancel(){
+        this.route.navigate(['/home']);
+    }
+
+  async confirm(self){
+    const loading = await self.loadingController.create({
+        message: 'Locating nearest driver in: 20s',
       });
       loading.present();
       //get all drivers
-      this.users.subscribe(users=>{
+      self.users.subscribe(users=>{
         for(let u = 0; u < users.length; u++){
             if(users[u].driver == true){
-                this.drivers.push(users[u]);
+                self.drivers.push(users[u]);
             }
         }
         //get user details
-        this.storage.get("name").then(name=>{
-            this.storage.get("mobile").then(mobile=>{
+        self.storage.get("name").then(name=>{
+            self.storage.get("mobile").then(mobile=>{
                 console.log(mobile, name);
                 //get the nearest driver
-                this.driver_details = this.http.get(this.url, {params:{"type":"getDriver","user_fullname":name,"user_mobile":mobile ,"drivers":JSON.stringify(this.drivers),"location":JSON.stringify(this.latlng)} });
-                this.driver_details.subscribe(x=>{
+                self.driver_details = self.http.get(self.url, {params:{"type":"getDriver","user_fullname":name,"user_mobile":mobile ,"drivers":JSON.stringify(self.drivers),"location":JSON.stringify(self.latlng)} });
+                self.driver_details.subscribe(x=>{
                     console.log("nearest driver ", x.Response);
                     //check if users hasn't accepted the ride after 10 seconds
                     var interval = setInterval(async ()=>{
                         console.log("waiting for driver");
-                        this.interval_counter--;
-                        console.log(this.interval_counter);
-                        if(this.interval_counter == 0){
-                            this.interval_counter = 20;
+                        self.interval_counter--;
+                        console.log(self.interval_counter);
+                        if(self.interval_counter == 0){
+                            self.interval_counter = 20;
                             clearInterval(interval);
                             loading.dismiss();
-                            const alert = await this.alert.create({
+                            const alert = await self.alert.create({
                               header: 'Update',
                               message: 'No driver available',
                               buttons: ['Okay']
@@ -88,20 +110,21 @@ export class ConfirmTruckPage implements OnInit {
                         }
                     }, 2000);
                     //check if driver has accepted
-                    this.users.subscribe(d=>{
+                    self.users.subscribe(d=>{
                         for(var i = 0; i < d.length; i++){
                             if(d[i].fullname == x.Response.fullname){
                                 console.log("driver's name is ", d[i].picking_up);
                                 console.log("current user's name is ", name);
                                 if(d[i].picking_up == name){
-                                    this.driver = true;
-                                    this.fullname = x.Response.fullname;
-                                    this.mobile = x.Response.mobile;
-                                    this.photo = x.Response.photo;
-                                    this.distance = x.Response.distance_from_user;
-                                    this.id_no = x.Response.id_no; 
+                                    self.driver = true;
+                                    self.fullname = x.Response.fullname;
+                                    self.mobile = x.Response.mobile;
+                                    self.photo = x.Response.photo;
+                                    self.distance = x.Response.distance_from_user;
+                                    self.id_no = x.Response.id_no; 
                                     clearInterval(interval);
                                     loading.dismiss();
+                                    self.viewModal();
 
                                 }
                             }
@@ -161,6 +184,7 @@ export class ConfirmTruckPage implements OnInit {
 
   stripePayment(){
     //stipe payment elements
+    var self = this;
     var stripe = Stripe('pk_test_V3YRUq2VsLyAzwqbxxpk4YuD00oAreff7h');
     var intent_secret = this.intent_secret;
     var showError = this.showPaymentError;
@@ -194,7 +218,7 @@ export class ConfirmTruckPage implements OnInit {
         } else {
           // The payment has been processed!
           if (result.paymentIntent.status === 'succeeded') {
-            conf();
+            conf(self);
             // Show a success message to your customer
             // There's a risk of the customer closing the window before callback
             // execution. Set up a webhook or plugin to listen for the

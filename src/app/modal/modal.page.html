@@ -1,0 +1,40 @@
+<ion-content>
+  <div id="body">
+      <div id="driverImage">
+        <img src="{{photo}}" id="driverImg">
+      </div>
+      
+
+      <h1>
+        Thank you for requesting, your driver's profile
+        can be found below.
+      </h1>
+
+      <ion-item class="driverData">
+        <ion-icon color="primary" name="star" slot="start"></ion-icon>
+        <ion-label>
+          Name: <b>{{ fullName }}</b>
+        </ion-label>
+      </ion-item>
+        <ion-item class="driverData">
+        <ion-icon color="primary" name="star" slot="start"></ion-icon>
+        <ion-label>
+          ID: <b>{{ id_no }}</b>
+        </ion-label>
+      </ion-item>
+      <ion-item class="driverData">
+        <ion-icon color="primary" name="star" slot="start"></ion-icon>
+        <ion-label>
+          Mobile: <b>{{mobile}}</b>
+        </ion-label>
+      </ion-item>
+      <ion-item class="driverData">
+        <ion-icon color="primary" name="star" slot="start"></ion-icon>
+        <ion-label>
+          Distance: <b>{{distance}}</b>
+        </ion-label>
+      </ion-item>
+
+      <ion-button  expand="block" (click)="dismiss()" id="cancelBtn" color="tertiary">Cancel</ion-button>
+  </div>
+</ion-content>

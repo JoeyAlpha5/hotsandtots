@@ -16,6 +16,7 @@
       <ion-card id="card">    
         <ion-card-content>
           <div id="left">
+            <!-- <div id="imgIcon2" (click)="viewModal()"></div> -->
             <div id="imgIcon2"></div>
           </div>
           <p id="needTowingText"><b>Need towing.</b></p>
@@ -29,6 +30,7 @@
             <div id="card-errors" role="alert"></div><br/>
           
             <ion-button  expand="block" id="submit" type="submit">Confirm</ion-button>
+            <ion-button  expand="block" (click)="cancel()" id="cancelBtn" color="tertiary">Cancel</ion-button>
           </form>
         </ion-card-content>
       </ion-card>
@@ -38,7 +40,7 @@
       <br>
       <br>
 
-      <ion-card id="card" *ngIf="driver == true">    
+      <!-- <ion-card id="card" *ngIf="driver == true">    
         <ion-card-content>
           <div id="driverInfoSec">
             <div class="ta">
@@ -63,7 +65,7 @@
             </div>
           </div>
         </ion-card-content>
-      </ion-card>
+      </ion-card> -->
 
       <!-- <ion-button *ngIf="driver == false" expand="block" (click)="confirm()">Confirm</ion-button> -->
     </div>

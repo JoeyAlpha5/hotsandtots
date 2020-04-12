@@ -88,15 +88,9 @@ export class HomePage {
       // loading.dismiss();//disable this when connection available
       //save the user's device id
       this.saveToken(x);
-      if(x == null){
-        this.route.navigate(['/login']);
-      }
-      this.storage.get("password").then(p=>{
-        this.auth.auth.signInWithEmailAndPassword(x, p).then(b=>{
-          console.log(b);
-        }).catch(()=>{
-        });
-      });
+      // if(x == null){
+      //   this.route.navigate(['/login']);
+      // }
     })    
   }
 
