@@ -23,7 +23,6 @@ declare var stripe;
   styleUrls: ['./confirm-truck.page.scss'],
 })
 export class ConfirmTruckPage implements OnInit {
-
     users:Observable<any>;
     loading;
     intent_response;
@@ -37,6 +36,8 @@ export class ConfirmTruckPage implements OnInit {
     distance;
     mobile;
     driver = false;
+    subscription: any;
+    driver_subscription: any;
     url = "https://jalome-api-python.herokuapp.com/distance-matrix/";
   constructor(private route: Router,private location: Location,private statusBar: StatusBar,private menu: MenuController,private storage: Storage,private geolocation: Geolocation,private alert: AlertController,public loadingController: LoadingController,private database: AngularFireDatabase,private http: HttpClient,private platform: Platform,public modalController: ModalController) {
     this.users = this.database.list("Users").valueChanges();
@@ -77,12 +78,15 @@ export class ConfirmTruckPage implements OnInit {
       });
       loading.present();
       //get all drivers
-      self.users.subscribe(users=>{
+      self.subscription = self.users.subscribe(users=>{
+        self.drivers = [];
         for(let u = 0; u < users.length; u++){
-            if(users[u].driver == true){
+            if(users[u].driver == true && users[u].picking_up == "none"){
+                console.log("driver",users[u]);
                 self.drivers.push(users[u]);
             }
         }
+        // self.users.subscribe().unsubscribe();
         //get user details
         self.storage.get("name").then(name=>{
             self.storage.get("mobile").then(mobile=>{
@@ -107,10 +111,12 @@ export class ConfirmTruckPage implements OnInit {
                             });
                         
                             await alert.present();
+                            //unsubscribe here    
+                            self.subscription.unsubscribe();
                         }
                     }, 2000);
                     //check if driver has accepted
-                    self.users.subscribe(d=>{
+                    self.driver_subscription = self.users.subscribe(d=>{
                         for(var i = 0; i < d.length; i++){
                             if(d[i].fullname == x.Response.fullname){
                                 console.log("driver's name is ", d[i].picking_up);
@@ -125,6 +131,9 @@ export class ConfirmTruckPage implements OnInit {
                                     clearInterval(interval);
                                     loading.dismiss();
                                     self.viewModal();
+                                    //unsubscibe here
+                                    self.driver_subscription.unsubscribe();
+                                    self.subscription.unsubscribe();
 
                                 }
                             }
@@ -136,7 +145,6 @@ export class ConfirmTruckPage implements OnInit {
 
 
                 });
-
             });
         });
 

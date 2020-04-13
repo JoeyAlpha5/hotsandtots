@@ -120,6 +120,7 @@ setupPush(){
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.backgroundColorByHexString('#000000');
+      this.router.navigateByUrl('home');
       this.splashScreen.hide();
       this.setupPush();
     });
