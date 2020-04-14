@@ -1,0 +1,86 @@
+<ion-header>
+  <ion-toolbar id="topBar">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Requests
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="display_home == true">
+  <div id="body">
+    <div id="driverImage">
+      <img src="{{photo}}" id="driverImg">
+    </div>
+    <h1>
+      Your have request a tow truck, your driver is on their way.
+    </h1>
+
+    <ion-item class="driverData">
+      <ion-icon color="primary" name="star" slot="start"></ion-icon>
+      <ion-label>
+        Name: <b>{{ fullName }}</b>
+      </ion-label>
+    </ion-item>
+      <ion-item class="driverData">
+      <ion-icon color="primary" name="star" slot="start"></ion-icon>
+      <ion-label>
+        ID: <b>{{ id_no }}</b>
+      </ion-label>
+    </ion-item>
+    <ion-item class="driverData">
+      <ion-icon color="primary" name="star" slot="start"></ion-icon>
+      <ion-label>
+        Mobile: <b>{{mobile}}</b>
+      </ion-label>
+    </ion-item>
+    <ion-item class="driverData">
+      <ion-icon color="primary" name="star" slot="start"></ion-icon>
+      <ion-label>
+        Number plate: <b>{{plate}}</b>
+      </ion-label>
+    </ion-item>
+
+    <ion-icon class="call" name="call" (click)="call(mobile)"></ion-icon>
+    <ion-button  expand="block" (click)="dismiss()" id="cancelBtn" color="tertiary">Okay</ion-button>
+  </div>
+</ion-content>
+
+
+
+<!--driver content-->
+<ion-content *ngIf="display_home == false">
+  <div id="body">
+  <div id="requestMap"></div>
+    <h1>
+      A user has requested a tow truck.
+    </h1>
+
+    <ion-item class="driverData">
+      <ion-icon color="primary" name="star" slot="start"></ion-icon>
+      <ion-label>
+        Name: <b>{{ fullName }}</b>
+      </ion-label>
+    </ion-item>
+    <ion-item class="driverData">
+      <ion-icon color="primary" name="star" slot="start"></ion-icon>
+      <ion-label>
+        Mobile: <b>{{mobile}}</b>
+      </ion-label>
+    </ion-item>
+    <ion-item class="driverData">
+      <ion-icon color="primary" name="star" slot="start"></ion-icon>
+      <ion-label>
+        Email: <b>{{email}}</b>
+      </ion-label>
+    </ion-item>
+
+    <ion-icon class="call" name="call" (click)="call(mobile)"></ion-icon>
+    <ion-label id="dangerLabel" color="danger">
+      Click the button below once you have completed the request.
+    </ion-label>
+    <ion-button  expand="block" (click)="completed()" id="cancelBtn" color="danger">Request Completed</ion-button>
+  </div>
+</ion-content>

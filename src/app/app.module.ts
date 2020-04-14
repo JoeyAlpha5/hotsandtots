@@ -15,14 +15,15 @@ import { AngularFireAuthModule} from '@angular/fire/auth';
 import { IonicStorageModule } from '@ionic/storage';
 import { DataService  } from './services/data.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
-import { ModalPageModule } from '../app/modal/modal.module';
+import { CallNumber } from '@ionic-native/call-number/ngx';
+// import { ModalPageModule } from '../app/modal/modal.module';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
     BrowserModule,
-    ModalPageModule,
+    // ModalPageModule,
     IonicModule.forRoot(),
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
@@ -37,6 +38,7 @@ import { ModalPageModule } from '../app/modal/modal.module';
     DataService, 
     Geolocation,
     OneSignal,
+    CallNumber,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent]

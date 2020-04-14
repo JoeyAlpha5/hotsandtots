@@ -38,6 +38,7 @@ export class ConfirmTruckPage implements OnInit {
     driver = false;
     subscription: any;
     driver_subscription: any;
+    spinner = false;
     url = "https://jalome-api-python.herokuapp.com/distance-matrix/";
   constructor(private route: Router,private location: Location,private statusBar: StatusBar,private menu: MenuController,private storage: Storage,private geolocation: Geolocation,private alert: AlertController,public loadingController: LoadingController,private database: AngularFireDatabase,private http: HttpClient,private platform: Platform,public modalController: ModalController) {
     this.users = this.database.list("Users").valueChanges();
@@ -53,32 +54,33 @@ export class ConfirmTruckPage implements OnInit {
   ngOnInit() {
   }
 
-    //view modal
-    async viewModal(name,id,mobile,distance){
-        const modal = await this.modalController.create({
-        component: ModalPage,    
-        componentProps: {
-            'fullName': this.fullname,
-            'id_no': this.id_no,
-            'mobile': this.mobile,
-            'distance':this.distance,
-            'photo':this.photo,
-          }
-        });
-        return await modal.present();
-    }
+    // //view modal
+    // async viewModal(name,id,mobile,distance){
+    //     const modal = await this.modalController.create({
+    //     component: ModalPage,    
+    //     componentProps: {
+    //         'fullName': this.fullname,
+    //         'id_no': this.id_no,
+    //         'mobile': this.mobile,
+    //         'distance':this.distance,
+    //         'photo':this.photo,
+    //       }
+    //     });
+    //     return await modal.present();
+    // }
 
     cancel(){
         this.route.navigate(['/home']);
     }
 
   async confirm(self){
-    const loading = await self.loadingController.create({
-        message: 'Locating nearest driver in: 20s',
-      });
-      loading.present();
+    // const loading = await self.loadingController.create({
+    //     message: 'Locating nearest driver in: 20s',
+    //   });
+    //   loading.present();
+    self.spinner = true;
       //get all drivers
-      self.subscription = self.users.subscribe(users=>{
+     self.subscription = self.users.subscribe(users=>{
         self.drivers = [];
         for(let u = 0; u < users.length; u++){
             if(users[u].driver == true && users[u].picking_up == "none"){
@@ -103,7 +105,7 @@ export class ConfirmTruckPage implements OnInit {
                         if(self.interval_counter == 0){
                             self.interval_counter = 20;
                             clearInterval(interval);
-                            loading.dismiss();
+                            self.spinner = false;
                             const alert = await self.alert.create({
                               header: 'Update',
                               message: 'No driver available',
@@ -129,8 +131,9 @@ export class ConfirmTruckPage implements OnInit {
                                     self.distance = x.Response.distance_from_user;
                                     self.id_no = x.Response.id_no; 
                                     clearInterval(interval);
-                                    loading.dismiss();
-                                    self.viewModal();
+                                    self.spinner = false;
+                                    // self.viewModal();
+                                    self.route.navigate(['/requests']);
                                     //unsubscibe here
                                     self.driver_subscription.unsubscribe();
                                     self.subscription.unsubscribe();

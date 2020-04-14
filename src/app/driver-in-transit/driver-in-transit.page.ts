@@ -57,7 +57,7 @@ export class DriverInTransitPage implements OnInit {
                     this.storage.get("mobile").then(mobile=>{
                         console.log("my mobile");
                         this.database.object("Users/"+mobile).update({"picking_up":this.fullname});
-                        this.route.navigate(['/driver-in-transit']);
+                        this.route.navigate(['/requests']);
                     });
                 }
           }

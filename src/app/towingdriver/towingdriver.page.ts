@@ -23,7 +23,6 @@ export class TowingdriverPage implements OnInit {
   location;
   places_data;
   fare_price;
-  private headers = new Headers({ 'Accept': 'application/json' })
   constructor(private Location: Location,private menu: MenuController,private statusBar: StatusBar,private route: Router,private storage: Storage,private auth: AngularFireAuth,public loadingController: LoadingController,private geolocation: Geolocation,private database: AngularFireDatabase,private http: HttpClient,private platform: Platform) { 
     this.platform.backButton.subscribeWithPriority(0, ()=>{
       this.location.back();
@@ -47,9 +46,10 @@ export class TowingdriverPage implements OnInit {
 
  async  SetDestination(destination){
     const loading = await this.loadingController.create({
-      message: 'Loading, please wait..',
+      message: 'Please wait...',
+      duration: 3000
     });
-    loading.present()
+    await loading.present();
     this.places = null;
     var url = "https://jalome-api-python.herokuapp.com/distance-matrix/";
     this.geolocation.getCurrentPosition().then((resp) => {

@@ -29,6 +29,11 @@ export class AppComponent {
       icon: 'person'
     },
     {
+      title:'Requests',
+      url:'/requests',
+      icon:'time'
+    },
+    {
       title:'Logout',
       // url:'/login',
       icon:'unlock'

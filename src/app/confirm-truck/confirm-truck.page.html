@@ -29,7 +29,7 @@
             <!-- We'll put the error messages in this element -->
             <div id="card-errors" role="alert"></div><br/>
           
-            <ion-button  expand="block" id="submit" type="submit">Confirm</ion-button>
+            <ion-button  expand="block" id="submit" type="submit"><p *ngIf="spinner == false">Confirm</p><ion-spinner *ngIf="spinner == true"></ion-spinner></ion-button>
             <ion-button  expand="block" (click)="cancel()" id="cancelBtn" color="tertiary">Cancel</ion-button>
           </form>
         </ion-card-content>
@@ -39,35 +39,6 @@
       </div>
       <br>
       <br>
-
-      <!-- <ion-card id="card" *ngIf="driver == true">    
-        <ion-card-content>
-          <div id="driverInfoSec">
-            <div class="ta">
-              <span>Thank you for requesting, your driver's profile
-                can be found below.
-              </span>
-            </div>
-          </div>
-        </ion-card-content>
-      </ion-card>
-
-
-      <ion-card id="card" *ngIf="driver == true">    
-        <ion-card-content>
-          <div id="driverInfoSec" class="bottomDriverInfoSec">
-            <div id="driverInfo">
-              <img src="https://firebasestorage.googleapis.com/v0/b/wilsons-aa459.appspot.com/o/{{photo}}?alt=media" id="driverImg">
-              <p *ngIf="driver == true" id="driverDet" class="driverFullName"><b>{{ fullname }}</b></p>
-              <p *ngIf="driver == true" id="driverDet">ID number <span>{{ id_no }}</span></p>
-              <p *ngIf="driver == true" id="driverDet">Mobile number: <span>{{ mobile }}</span></p>
-              <p *ngIf="driver == true" id="driverDet">Distance: <span>{{ distance }} away</span></p>
-            </div>
-          </div>
-        </ion-card-content>
-      </ion-card> -->
-
-      <!-- <ion-button *ngIf="driver == false" expand="block" (click)="confirm()">Confirm</ion-button> -->
     </div>
 
   </div>
