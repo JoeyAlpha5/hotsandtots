@@ -13,6 +13,7 @@ import { Location } from "@angular/common";
 import { ModalController } from '@ionic/angular';
 import { ModalPage } from "../modal/modal.page";
 import { Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
 declare var google;
 declare var Stripe;
 declare var stripe;
@@ -39,9 +40,11 @@ export class ConfirmTruckPage implements OnInit {
     subscription: any;
     driver_subscription: any;
     spinner = false;
+    users_once;
     url = "https://jalome-api-python.herokuapp.com/distance-matrix/";
-  constructor(private route: Router,private location: Location,private statusBar: StatusBar,private menu: MenuController,private storage: Storage,private geolocation: Geolocation,private alert: AlertController,public loadingController: LoadingController,private database: AngularFireDatabase,private http: HttpClient,private platform: Platform,public modalController: ModalController) {
+  constructor(public toastController: ToastController,private route: Router,private location: Location,private statusBar: StatusBar,private menu: MenuController,private storage: Storage,private geolocation: Geolocation,private alert: AlertController,public loadingController: LoadingController,private database: AngularFireDatabase,private http: HttpClient,private platform: Platform,public modalController: ModalController) {
     this.users = this.database.list("Users").valueChanges();
+    this.users_once = this.database.list("users").query.once("value");
     this.platform.backButton.subscribeWithPriority(0, ()=>{
         this.location.back();
       });
@@ -50,6 +53,7 @@ export class ConfirmTruckPage implements OnInit {
   Vehicle: any;
   Price: any;
   destination:any;
+//   interval_counter = 5;
   interval_counter = 20;
   ngOnInit() {
   }
@@ -74,13 +78,19 @@ export class ConfirmTruckPage implements OnInit {
     }
 
   async confirm(self){
-    // const loading = await self.loadingController.create({
-    //     message: 'Locating nearest driver in: 20s',
-    //   });
-    //   loading.present();
     self.spinner = true;
-      //get all drivers
-     self.subscription = self.users.subscribe(users=>{
+    self.presentToast("Locating nearest driver");
+    self.database.list("Users").query.once("value",data=>{
+        console.log(data);
+    });
+    //get all drivers
+    self.database.list("Users").query.once("value", data=>{
+        // console.log(data.val());
+        var obj = data.val();
+        var users = Object.keys(obj).map(function(key) {
+          return obj[key];
+        });
+
         self.drivers = [];
         for(let u = 0; u < users.length; u++){
             if(users[u].driver == true && users[u].picking_up == "none"){
@@ -105,18 +115,9 @@ export class ConfirmTruckPage implements OnInit {
                         if(self.interval_counter == 0){
                             self.interval_counter = 20;
                             clearInterval(interval);
-                            self.spinner = false;
-                            const alert = await self.alert.create({
-                              header: 'Update',
-                              message: 'No driver available',
-                              buttons: ['Okay']
-                            });
-                        
-                            await alert.present();
-                            //unsubscribe here    
-                            self.subscription.unsubscribe();
+                            self.getNextDriver(self,x.Response,self.drivers,name,mobile);
                         }
-                    }, 2000);
+                    }, 1000);
                     //check if driver has accepted
                     self.driver_subscription = self.users.subscribe(d=>{
                         for(var i = 0; i < d.length; i++){
@@ -133,10 +134,11 @@ export class ConfirmTruckPage implements OnInit {
                                     clearInterval(interval);
                                     self.spinner = false;
                                     // self.viewModal();
+                                    self.driver_subscription.unsubscribe();
                                     self.route.navigate(['/requests']);
                                     //unsubscibe here
-                                    self.driver_subscription.unsubscribe();
-                                    self.subscription.unsubscribe();
+                                    // self.subscription.unsubscribe();
+                                    break;
 
                                 }
                             }
@@ -171,6 +173,85 @@ export class ConfirmTruckPage implements OnInit {
       this.destination = d;
     });
   }
+
+
+  //toast
+  async presentToast(message) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000
+    });
+    toast.present();
+  }
+
+
+//   //get the next nearest driver
+    getNextDriver(self,nearest_driver,drivers,name,mobile){
+        console.log(drivers);
+        self.presentToast("Locating next nearest driver");
+    //   self.subscription.unsubscribe();
+        for(var count = 0; count < drivers.length; count++){
+            if(drivers[count].email == nearest_driver.email){
+                drivers.splice(count,1);
+                console.log("next drivers", drivers);
+                // if there are any neareby drivers
+                if(drivers.length != 0){
+                    //get next nearest driver
+                    var req = self.http.get(self.url, {params:{"type":"getDriver","user_fullname":name,"user_mobile":mobile ,"drivers":JSON.stringify(drivers),"location":JSON.stringify(self.latlng)} });
+                    req.subscribe((d)=>{
+                        console.log("nearest driver ", d.Response);
+                        //give it 20s for the next driver to accept
+                        var interval = setInterval(async ()=>{
+                            console.log("waiting for driver");
+                            self.interval_counter--;
+                            console.log(self.interval_counter);
+                            //if first driver doesn't accept
+                            if(self.interval_counter == 0){
+                                self.interval_counter = 20;
+                                clearInterval(interval);
+                                self.getNextDriver(self,d.Response,drivers,name,mobile);
+                            }
+                        }, 1000);
+                        //
+                        //listen for drivers who accept
+                        //check if driver has accepted
+                        self.driver_subscription = self.users.subscribe(dr=>{
+                            for(var i = 0; i < dr.length; i++){
+                                if(dr[i].fullname == d.Response.fullname){
+                                    console.log("driver's name is ", dr[i].picking_up);
+                                    console.log("current user's name is ", name);
+                                    if(dr[i].picking_up == name){
+                                        self.driver = true;
+                                        self.fullname = d.Response.fullname;
+                                        self.mobile = d.Response.mobile;
+                                        self.photo = d.Response.photo;
+                                        self.distance = d.Response.distance_from_user;
+                                        self.id_no = d.Response.id_no; 
+                                        clearInterval(interval);
+                                        self.spinner = false;
+                                        // self.viewModal();
+                                        self.route.navigate(['/requests']);
+                                        //unsubscibe here
+                                        self.driver_subscription.unsubscribe();
+                                        // self.subscription.unsubscribe();
+
+                                    }
+                                }
+                            }
+                        });
+                        //
+                    });
+                    self.subscription.unsubscribe();
+                    break;
+                }else{
+                    self.spinner = false;
+                    self.showError("No drivers located");
+                }
+            }
+        }
+    //   self.subscription.unsubscribe();
+    }
+
 
   //stripe
   async getIntent(price){
@@ -247,7 +328,6 @@ export class ConfirmTruckPage implements OnInit {
 
 
   //error message
-
   async showError(err){
     const alert = await this.alert.create({
       header: 'Unable to continue',

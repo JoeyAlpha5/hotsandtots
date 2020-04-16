@@ -76,6 +76,7 @@ export class RequestsPage implements OnInit {
             this.id_no = users[count].driver_id;
             this.photo = users[count].image;
             this.plate = users[count].plate;
+            break;
           }else{
             this.fullName = "";
           }
