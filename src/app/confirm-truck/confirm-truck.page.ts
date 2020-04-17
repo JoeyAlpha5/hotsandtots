@@ -41,6 +41,7 @@ export class ConfirmTruckPage implements OnInit {
     driver_subscription: any;
     spinner = false;
     users_once;
+    cash = true;
     url = "https://jalome-api-python.herokuapp.com/distance-matrix/";
   constructor(public toastController: ToastController,private route: Router,private location: Location,private statusBar: StatusBar,private menu: MenuController,private storage: Storage,private geolocation: Geolocation,private alert: AlertController,public loadingController: LoadingController,private database: AngularFireDatabase,private http: HttpClient,private platform: Platform,public modalController: ModalController) {
     this.users = this.database.list("Users").valueChanges();
@@ -154,6 +155,17 @@ export class ConfirmTruckPage implements OnInit {
         });
 
       });
+  }
+
+
+  cardPayment(event){
+    console.log(event.checked);
+      if(this.cash != false){
+        this.storage.get("fare_price").then(fare=>{
+            this.Price = fare;
+            this.getIntent(fare);
+          });
+      }
   }
 
   ionViewDidEnter(){
