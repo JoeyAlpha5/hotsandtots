@@ -16,7 +16,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { DataService  } from './services/data.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { CallNumber } from '@ionic-native/call-number/ngx';
-// import { ModalPageModule } from '../app/modal/modal.module';
+import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -39,6 +39,7 @@ import { CallNumber } from '@ionic-native/call-number/ngx';
     Geolocation,
     OneSignal,
     CallNumber,
+    Diagnostic,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent]

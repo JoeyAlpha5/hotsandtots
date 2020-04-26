@@ -7,6 +7,9 @@ import { AlertController } from '@ionic/angular';
 import { Location } from "@angular/common";
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { CallNumber } from '@ionic-native/call-number/ngx';
+import { ActionSheetController } from '@ionic/angular';
+import { HttpClient } from '@angular/common/http';
+import { ToastController } from '@ionic/angular';
 declare var google;
 @Component({
   selector: 'app-requests',
@@ -25,12 +28,14 @@ export class RequestsPage implements OnInit {
   photo;
   plate;
   email;
-  constructor(private auth: AngularFireAuth,private route: Router,private database: AngularFireDatabase,private storage: Storage,public alertController: AlertController,private location: Location,private geolocation: Geolocation,private callNumber: CallNumber) {
+  constructor(private auth: AngularFireAuth,private route: Router,private database: AngularFireDatabase,private storage: Storage,public alertController: AlertController,private location: Location,private geolocation: Geolocation,private callNumber: CallNumber,public actionSheetController: ActionSheetController,private http: HttpClient,public toastController: ToastController) {
     this.user_list = this.database.list("Users").valueChanges();
    }
 
   ngOnInit() {
   }
+
+
 
   ionViewDidEnter(){
     //get user
@@ -165,7 +170,60 @@ export class RequestsPage implements OnInit {
     await alert.present();
   }
 
+  cancel(){
+    if(this.mobile != undefined && this.mobile != null){
+        console.log(this.mobile);
+        console.log(this.mobile);
+        this.database.object("Users/"+this.mobile).query.once("value",data=>{
+          var user = data.val();
+          var device_id = user.device_id;
+          var url = "https://jalome-api-python.herokuapp.com/distance-matrix/";
+          this.database.object("Users/"+this.mobile).update({"picking_up":"none"}).then(()=>{
+              this.http.get(url, {params:{"type":"cancelReq", "device_id":device_id} }).subscribe(x=>{  
+                this.route.navigate(['/home']);
+              });
+          });
+      });
+    }
+}
 
+
+  //report driver 
+  async report(){
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Report',
+      buttons: [{
+        text: 'Report driver for poor service',
+        role: 'destructive',
+        icon: 'thumbs-down',
+        handler: () => {
+          //report driver
+          var url = "https://jalome-api-python.herokuapp.com/distance-matrix/";
+          this.http.get(url, {params:{"type":"reportDriver", "driver":this.fullName} }).subscribe(x=>{
+            this.presentToast("Driver has been reported");
+          });
+        }
+      }, {
+        text: 'Cancel',
+        icon: 'close',
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked');
+        }
+      }]
+    });
+    await actionSheet.present();
+  }
+  
+
+  //present toat
+  async presentToast(message) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000
+    });
+    toast.present();
+  }
 
 
 

@@ -21,7 +21,12 @@
           </div>
           <p id="needTowingText"><b>Need towing.</b></p>
           <span id="needTowingText">Price: <b>R{{ Price }}</b>, Chosen tow truck: <b>{{ Vehicle }}</b></span>
-          <form id="payment-form" *ngIf="driver == false">
+          <!--cash or card option-->
+          <ion-item id="cashOption">
+            <ion-label>Cash on delivery: </ion-label>
+            <ion-checkbox slot="end" (click)="cardPayment($event)" [(ngModel)]="cash"></ion-checkbox>
+          </ion-item>
+          <form id="payment-form" *ngIf="driver == false && cash == false">
             <div id="card-element">
               <!-- Elements will create input elements here -->
             </div>
@@ -30,8 +35,9 @@
             <div id="card-errors" role="alert"></div><br/>
           
             <ion-button  expand="block" id="submit" type="submit"><p *ngIf="spinner == false">Confirm</p><ion-spinner *ngIf="spinner == true"></ion-spinner></ion-button>
-            <ion-button  expand="block" (click)="cancel()" id="cancelBtn" color="tertiary">Cancel</ion-button>
           </form>
+          <ion-button *ngIf="cash == true" (click)="confirm(this)" expand="block" id="submit" type="submit"><p *ngIf="spinner == false">Confirm</p><ion-spinner *ngIf="spinner == true"></ion-spinner></ion-button>
+          <ion-button  expand="block" (click)="cancel()" id="cancelBtn" color="tertiary">Cancel</ion-button>
         </ion-card-content>
       </ion-card>
 

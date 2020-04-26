@@ -11,6 +11,8 @@ import { AngularFireDatabase} from '@angular/fire/database';
 import { Observable } from 'rxjs';
 import { MenuController } from '@ionic/angular';
 import { Platform } from '@ionic/angular';
+import { Diagnostic } from '@ionic-native/diagnostic/ngx';
+import { AlertController } from '@ionic/angular';
 declare var google;
 @Component({
   selector: 'app-home',
@@ -28,7 +30,7 @@ export class HomePage {
   location: string;
   mail:string;
   drive: boolean = false;
-  constructor(private menu: MenuController,private statusBar: StatusBar,private geolocation: Geolocation,private route: Router,private storage: Storage,public actionSheetController: ActionSheetController,private auth: AngularFireAuth,public loadingController: LoadingController,private platform: Platform,private oneSignal: OneSignal,private database: AngularFireDatabase) {
+  constructor(private menu: MenuController,private statusBar: StatusBar,private geolocation: Geolocation,private route: Router,private storage: Storage,public actionSheetController: ActionSheetController,private auth: AngularFireAuth,public loadingController: LoadingController,private platform: Platform,private oneSignal: OneSignal,private database: AngularFireDatabase,private diagnostic: Diagnostic,public alertController: AlertController) {
     // this.statusBar.styleDefault();
     this.users = this.database.list("Users").valueChanges();
     //close app on back press
@@ -40,7 +42,20 @@ export class HomePage {
 
   //towing
   towing(){
-    this.route.navigate(['/towingdriver']);
+    //check location first
+    this.diagnostic.isLocationEnabled().then(isEnabled=>{
+      console.log(isEnabled);
+      if(!isEnabled){
+        console.log("location not enabled");
+        this.showError("Please enable location services to continue");
+      }else{
+        console.log("location enabled");
+        this.route.navigate(['/towingdriver']);
+      }
+    }).catch(err=>{
+      console.log("cordova not available");
+      this.route.navigate(['/towingdriver']);
+    });
   }
 
 
@@ -182,6 +197,18 @@ export class HomePage {
         var uluru = {lat: resp.coords.latitude, lng: resp.coords.longitude};
         var marker = new google.maps.Marker({position: uluru, map: map});
      })
+  }
+
+
+  //show error
+  async showError(err){
+    const alert = await this.alertController.create({
+      header: 'Unable to continue',
+      subHeader: 'error message:',
+      message: err,
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 
 

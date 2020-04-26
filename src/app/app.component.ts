@@ -10,6 +10,7 @@ import { AlertController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { LoadingController } from '@ionic/angular';
 import { Observable } from 'rxjs';
+import { AngularFireAuth} from '@angular/fire/auth';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -36,7 +37,8 @@ export class AppComponent {
     {
       title:'Logout',
       // url:'/login',
-      icon:'unlock'
+      icon:'unlock',
+    
     }
   ];
 
@@ -51,7 +53,8 @@ export class AppComponent {
     private router: Router,
     public alertController: AlertController,
     private http: HttpClient,
-    public loadingController: LoadingController
+    public loadingController: LoadingController,
+    private auth: AngularFireAuth,
   ) {
     this.initializeApp();
   }
@@ -110,6 +113,9 @@ setupPush(){
       this.storage.set("destination", re.Response.destination);
       loading.dismiss();
       this.route.navigate(['/driver-in-transit']);
+    },err=>{
+      loading.dismiss();
+      this.route.navigate(['/home']);
     })
 
     // const alert = await this.alertController.create({
@@ -121,13 +127,26 @@ setupPush(){
     // await alert.present();
   }
 
+  //check if user is logged in
+  checkUser(){
+    //check if user is signed in
+    this.auth.auth.onAuthStateChanged(user=>{
+      if(user){
+        console.log(user);
+        this.router.navigateByUrl('home');
+      }else{
+        this.router.navigateByUrl('login');
+      }
+    });
+  }
+
 
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.backgroundColorByHexString('#000000');
-      this.router.navigateByUrl('home');
       this.splashScreen.hide();
       this.setupPush();
+      this.checkUser();
     });
   }
 }

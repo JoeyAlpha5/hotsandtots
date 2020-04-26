@@ -27,6 +27,11 @@ export class LoginPage implements OnInit {
   ngOnInit() {
   }
 
+
+  passwordReset(){
+    this.route.navigate(['/password-reset']);
+  }
+
   signUp(){
     this.route.navigate(['/register']);
   }
@@ -84,21 +89,23 @@ export class LoginPage implements OnInit {
     const loading = await this.loadingController.create({
       message: 'Signing in please wait',
     });
-    
-    loading.present();
-    this.storage.get("email").then(x=>{
-      if(x == null){
-        loading.dismiss();
-      }
-      console.log("email is", x);
-      this.storage.get("password").then(p=>{
-        this.auth.auth.signInWithEmailAndPassword(x, p).then(b=>{
-          console.log(b);
-          this.route.navigate(['/home']);
-          loading.dismiss();
-        }).catch(()=>{
-        });
-      });
-    })    
+    this.auth.auth.signOut().then(re=>{
+      console.log(re);
+    });
+    // loading.present();
+    // this.storage.get("email").then(x=>{
+    //   if(x == null){
+    //     loading.dismiss();
+    //   }
+    //   console.log("email is", x);
+    //   this.storage.get("password").then(p=>{
+    //     this.auth.auth.signInWithEmailAndPassword(x, p).then(b=>{
+    //       console.log(b);
+    //       this.route.navigate(['/home']);
+    //       loading.dismiss();
+    //     }).catch(()=>{
+    //     });
+    //   });
+    // })    
   }
 }
