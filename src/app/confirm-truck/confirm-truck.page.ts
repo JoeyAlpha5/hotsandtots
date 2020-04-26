@@ -177,6 +177,7 @@ export class ConfirmTruckPage implements OnInit {
       });
   }
 
+
   ionViewDidEnter(){
     this.menu.enable(true);
     

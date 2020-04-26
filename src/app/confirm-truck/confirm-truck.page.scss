@@ -32,6 +32,10 @@ ion-item#cashOption {
     margin-bottom: 100px;
 }
 
+ion-item#cashOption {
+    --background: black;
+    --color: white;
+}
 
 #cancelBtn{
     margin-top: 15px;
