@@ -19,6 +19,7 @@ export class RegisterPage implements OnInit {
   password = "";
   password_2 = "";
   mobilenum = 0;
+  zero = "0";
   users;
   constructor(private menu: MenuController,private statusBar: StatusBar,private route: Router,private storage: Storage,private alert: AlertController,private database: AngularFireDatabase,private auth: AngularFireAuth,public loadingController: LoadingController) {
     this.users = this.database.list("Users").valueChanges();
@@ -50,7 +51,7 @@ export class RegisterPage implements OnInit {
   }
 
   createNewDatabaseEntry(){
-    this.database.object("Users/"+this.mobilenum).set({"mobile":this.mobilenum,"email":this.email,"fullname":"","driver":false,"location":""});
+    this.database.object("Users/"+this.zero + JSON.stringify(this.mobilenum)).set({"mobile":this.zero + JSON.stringify(this.mobilenum),"email":this.email,"fullname":"","driver":false,"location":""});
   }
 
 
